@@ -1,9 +1,14 @@
 import { useState } from "react";
 
-function EntriesAdd({ handleAddEntry }) {
+// DEV ONLY
+import AddRandomEntry from "./AddRandomEntry";
+///////////
+
+function EntriesAdd({ handleAddEntry, setEntries }) {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
+    dateOfBirth: "",
     description: "",
   });
 
@@ -20,14 +25,14 @@ function EntriesAdd({ handleAddEntry }) {
     if (
       formData.name &&
       formData.lastName &&
-      formData.age &&
+      formData.dateOfBirth &&
       formData.description
     ) {
       handleAddEntry(formData);
       setFormData({
         name: "",
         lastName: "",
-        age: "",
+        dateOfBirth: "",
         description: "",
       });
     } else {
@@ -36,8 +41,8 @@ function EntriesAdd({ handleAddEntry }) {
   }
 
   return (
-    <div className="p-10 flex items-center justify-center">
-      <form>
+    <div className="p-10 flex flex-col gap-[1em] items-center justify-center">
+      <form className="flex gap-[1em] flex-wrap">
         <input
           type="text"
           id="name"
@@ -55,11 +60,10 @@ function EntriesAdd({ handleAddEntry }) {
           onChange={(event) => handleInputChange(event)}
         />
         <input
-          type="number"
-          id="age"
-          name="age"
-          placeholder="Age"
-          value={formData.age}
+          type="date"
+          id="dateOfBirth"
+          name="dateOfBirth"
+          value={formData.dateOfBirth}
           onChange={(event) => handleInputChange(event)}
         />
         <input
@@ -73,9 +77,11 @@ function EntriesAdd({ handleAddEntry }) {
         <input
           type="submit"
           value="Add"
+          className="cursor-pointer hover:bg-green-600 hover:text-white"
           onClick={(event) => handleFormSubmit(event)}
         />
       </form>
+      <AddRandomEntry setEntries={setEntries} />
     </div>
   );
 }

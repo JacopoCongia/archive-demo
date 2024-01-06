@@ -11,7 +11,8 @@ table, th, td {
 }
 
 th, td {
-    padding: 1em 0;
+    padding: 0.5em 0;
+    font-size: 0.8rem;
 }
 
 input {

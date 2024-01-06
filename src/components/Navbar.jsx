@@ -1,6 +1,6 @@
 function Navbar() {
   return (
-    <header className="p-5 bg-black text-white font-bold text-[2rem]">
+    <header className="p-5 bg-[#222] text-white font-bold text-[2rem]">
       Archive Demo
     </header>
   );

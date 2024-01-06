@@ -4,41 +4,57 @@ import { nanoid } from "nanoid";
 
 import Navbar from "./components/Navbar";
 import EntriesAdd from "./components/EntriesAdd";
+import SearchBar from "./components/SearchBar";
+import TableRow from "./components/TableRow";
 
 function App() {
   const [entries, setEntries] = useState([]);
 
   function handleAddEntry(entry) {
-    const updatedEntry = { ...entry, id: nanoid() };
+    const updatedEntry = {
+      ...entry,
+      id: nanoid(),
+    };
     setEntries((prevEntries) => [...prevEntries, updatedEntry]);
-    console.log(entries);
+  }
+
+  function handleRemoveEntry(entry) {
+    // console.log(entry);
+
+    const updatedEntries = entries.filter((item) => {
+      return entry !== item;
+    });
+
+    setEntries(updatedEntries);
   }
 
   const entryList = entries.map((entry) => {
     return (
-      <tr key={entry.id}>
-        <td className="text-center">{entry.name}</td>
-        <td className="text-center">{entry.lastName}</td>
-        <td className="text-center">{entry.age}</td>
-        <td className="text-center">{entry.description}</td>
-        <td className="text-center">{entry.id}</td>
-      </tr>
+      <TableRow
+        key={entry.id}
+        entry={entry}
+        handleRemoveEntry={handleRemoveEntry}
+      />
     );
   });
 
   return (
     <>
       <Navbar />
-      <EntriesAdd handleAddEntry={handleAddEntry} />
-      <div className="flex items-center justify-center">
+      <EntriesAdd
+        handleAddEntry={handleAddEntry}
+        setEntries={setEntries}
+      />
+      <div className="flex flex-col gap-[1em] items-center justify-center">
+        <SearchBar />
         <table className="w-[80%]">
           <thead>
             <tr className="bg-red-800 text-white">
-              <th className="py-[1em]">Name</th>
+              <th>Name</th>
               <th>Last Name</th>
-              <th>Age</th>
+              <th>Date of Birth</th>
               <th>Description</th>
-              <th>ID</th>
+              <th className="min-w-[80px]"></th>
             </tr>
           </thead>
           <tbody>{entryList}</tbody>
