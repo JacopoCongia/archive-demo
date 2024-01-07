@@ -18,6 +18,21 @@ function App() {
     setEntries((prevEntries) => [...prevEntries, updatedEntry]);
   }
 
+  // const sortedEntries = entries.sort((a, b) => {
+  //   const nameA = a.name.toUpperCase();
+  //   const nameB = b.name.toUpperCase();
+
+  //   if (nameA < nameB) {
+  //     return -1;
+  //   } else if (nameA > nameB) {
+  //     return 1;
+  //   } else {
+  //     return 0;
+  //   }
+  // });
+
+  // console.log(sortedEntries);
+
   function handleRemoveEntry(entry) {
     // console.log(entry);
 

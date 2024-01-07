@@ -1,7 +1,8 @@
 import { fakerDE as faker } from "@faker-js/faker";
 
 function AddRandomEntry({ setEntries }) {
-  function handleClick() {
+  function handleClick(e) {
+    e.preventDefault();
     setEntries((prevEntries) => [
       ...prevEntries,
       {
@@ -18,7 +19,7 @@ function AddRandomEntry({ setEntries }) {
     <>
       <button
         className="border bg-green-700 text-white py-[0.5em] px-[2em] hover:bg-green-600"
-        onClick={() => handleClick()}
+        onClick={(e) => handleClick(e)}
       >
         Add Random Entry
       </button>
