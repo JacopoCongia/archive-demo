@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-function SearchBar() {
-  const [term, setTerm] = useState("");
-
+function SearchBar({ setTerm }) {
   const handleSearchChange = (event) => {
     event.preventDefault();
     setTerm(event.target.value);

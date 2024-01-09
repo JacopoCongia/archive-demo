@@ -8,10 +8,11 @@ function AddRandomEntry({ setEntries }) {
       {
         name: faker.person.firstName(),
         lastName: faker.person.lastName(),
-        dateOfBirth: faker.date.birthdate().toDateString(),
+        city: faker.location.city(),
         description: faker.person.bio(),
         id: faker.string.nanoid(10),
-      },
+        createdAt: new Date()
+      }
     ]);
   }
 

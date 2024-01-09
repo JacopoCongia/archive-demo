@@ -8,8 +8,8 @@ function EntriesAdd({ handleAddEntry, setEntries }) {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
-    dateOfBirth: "",
-    description: "",
+    city: "",
+    description: ""
   });
 
   function handleInputChange(event) {
@@ -25,15 +25,15 @@ function EntriesAdd({ handleAddEntry, setEntries }) {
     if (
       formData.name &&
       formData.lastName &&
-      formData.dateOfBirth &&
+      formData.city &&
       formData.description
     ) {
       handleAddEntry(formData);
       setFormData({
         name: "",
         lastName: "",
-        dateOfBirth: "",
-        description: "",
+        city: "",
+        description: ""
       });
     } else {
       alert("Please fill all of the fields before adding an entry");
@@ -60,10 +60,11 @@ function EntriesAdd({ handleAddEntry, setEntries }) {
           onChange={(event) => handleInputChange(event)}
         />
         <input
-          type="date"
-          id="dateOfBirth"
-          name="dateOfBirth"
-          value={formData.dateOfBirth}
+          type="text"
+          id="city"
+          name="city"
+          placeholder="City"
+          value={formData.city}
           onChange={(event) => handleInputChange(event)}
         />
         <input
