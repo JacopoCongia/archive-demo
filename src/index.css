@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    font-family: Montserrat, sans-serif;
+}
+
+table, th, td {
+    border: 1px solid #a8a8a8;
+}
+
+th, td {
+    padding: 0.5em 0;
+    font-size: 0.8rem;
+}
+
+input {
+    border: 1px solid #a8a8a8;
+    padding: 0.5em 1em
+}
