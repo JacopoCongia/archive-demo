@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import TableRow from "./TableRow";
 
 function Table({ entries, tableConfig, handleRemoveEntry }) {
-  const tableRows = entries.map((entry) => {
+  const tableRows = entries?.map((entry) => {
     return (
       <TableRow
         key={entry.id}
