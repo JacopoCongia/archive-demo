@@ -4,7 +4,7 @@ import { useState } from "react";
 import AddRandomEntry from "./AddRandomEntry";
 ///////////
 
-function EntriesAdd({ handleAddEntry, setEntries }) {
+function EntriesAdd({ addEntryToDb, handleAddEntry }) {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -82,7 +82,7 @@ function EntriesAdd({ handleAddEntry, setEntries }) {
           onClick={(event) => handleFormSubmit(event)}
         />
       </form>
-      <AddRandomEntry setEntries={setEntries} />
+      <AddRandomEntry handleAddEntry={handleAddEntry} />
     </div>
   );
 }

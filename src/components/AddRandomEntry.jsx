@@ -1,19 +1,14 @@
 import { fakerDE as faker } from "@faker-js/faker";
 
-function AddRandomEntry({ setEntries }) {
+function AddRandomEntry({ handleAddEntry }) {
   function handleClick(e) {
     e.preventDefault();
-    setEntries((prevEntries) => [
-      ...prevEntries,
-      {
-        name: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        city: faker.location.city(),
-        description: faker.person.bio(),
-        id: faker.string.nanoid(10),
-        createdAt: new Date()
-      }
-    ]);
+    handleAddEntry({
+      name: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      city: faker.location.city(),
+      description: faker.person.bio()
+    });
   }
 
   return (

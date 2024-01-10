@@ -1,14 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { nanoid } from "nanoid";
 
 import Navbar from "./components/Navbar";
 import EntriesAdd from "./components/EntriesAdd";
-import SearchBar from "./components/SearchBar";
 import SortableTable from "./components/SortableTable";
+
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  deleteDoc
+} from "firebase/firestore";
+import { db } from "../firebase.js";
 
 function App() {
   const [entries, setEntries] = useState([]);
+
+  const getEntriesFromDb = async () => {
+    const querySnapshot = await getDocs(collection(db, "entries"));
+    const people = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id
+    }));
+
+    setEntries(people);
+  };
+
+  const addEntryToDb = async (entry) => {
+    try {
+      await addDoc(collection(db, "entries"), entry);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  function handleAddEntry(entry) {
+    const updatedEntry = {
+      ...entry,
+      createdAt: new Date().toLocaleString("de-DE")
+    };
+    addEntryToDb(updatedEntry);
+    getEntriesFromDb();
+  }
+
+  async function handleRemoveEntry(entry) {
+    const updatedEntries = entries.filter((item) => {
+      return entry.id !== item.id;
+    });
+
+    setEntries(updatedEntries);
+
+    await deleteDoc(doc(db, "entries", entry.id));
+  }
+
+  useEffect(() => {
+    getEntriesFromDb();
+  }, []);
 
   const tableConfig = [
     {
@@ -29,7 +78,7 @@ function App() {
     { label: "Bio", render: (entry) => entry.description },
     {
       label: "Created At",
-      render: (entry) => entry.createdAt.toString(),
+      render: (entry) => entry.createdAt,
       sortValue: (entry) => entry.createdAt
     },
     {
@@ -44,23 +93,6 @@ function App() {
       )
     }
   ];
-
-  function handleAddEntry(entry) {
-    const updatedEntry = {
-      ...entry,
-      id: nanoid(),
-      createdAt: new Date()
-    };
-    setEntries((prevEntries) => [...prevEntries, updatedEntry]);
-  }
-
-  function handleRemoveEntry(entry) {
-    const updatedEntries = entries.filter((item) => {
-      return entry !== item;
-    });
-
-    setEntries(updatedEntries);
-  }
 
   return (
     <>
