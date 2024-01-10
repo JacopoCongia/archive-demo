@@ -5,11 +5,11 @@ import SearchBar from "./SearchBar";
 import Table from "./Table";
 
 function SortableTable(props) {
+  const { tableConfig, entries } = props;
+
   const [sortOrder, setSortOrder] = useState(null);
   const [sortCriteria, setSortCriteria] = useState(null);
   const [term, setTerm] = useState("");
-
-  const { tableConfig, entries } = props;
 
   function handleClick(label) {
     if (sortCriteria && label !== sortCriteria) {
@@ -52,9 +52,10 @@ function SortableTable(props) {
   });
 
   let sortedEntries = entries;
+  let searchEntries = entries;
 
   if (term) {
-    sortedEntries = entries.filter((entry) => {
+    searchEntries = entries.filter((entry) => {
       return (
         entry.name.toLowerCase().includes(term.toLowerCase()) ||
         entry.lastName.toLowerCase().includes(term.toLowerCase()) ||
@@ -97,7 +98,11 @@ function SortableTable(props) {
   return (
     <>
       <SearchBar setTerm={setTerm} />
-      <Table {...props} entries={sortedEntries} tableConfig={updatedConfig} />
+      {term ? (
+        <Table {...props} entries={searchEntries} tableConfig={updatedConfig} />
+      ) : (
+        <Table {...props} entries={sortedEntries} tableConfig={updatedConfig} />
+      )}
     </>
   );
 }
