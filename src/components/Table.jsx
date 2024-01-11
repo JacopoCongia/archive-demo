@@ -19,7 +19,12 @@ function Table({ entries, tableConfig, handleRemoveEntry }) {
       return <Fragment key={column.label}>{column.header()}</Fragment>;
     } else {
       return (
-        <th key={column.label} className="min-w-[80px]">
+        <th
+          key={column.label}
+          className={`min-w-[50px] min-[680px]:min-w-[80px] ${
+            column.responsive && "hidden min-[680px]:table-cell"
+          }`}
+        >
           {column.label}
         </th>
       );
@@ -27,7 +32,7 @@ function Table({ entries, tableConfig, handleRemoveEntry }) {
   });
 
   return (
-    <table className="w-[80%] table-auto">
+    <table className="w-[80%]">
       <thead>
         <tr className="bg-red-800 text-white">{tableHeaders}</tr>
       </thead>

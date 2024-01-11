@@ -9,7 +9,7 @@ function EntriesAdd({ addEntryToDb, handleAddEntry }) {
     name: "",
     lastName: "",
     city: "",
-    description: ""
+    jobTitle: ""
   });
 
   function handleInputChange(event) {
@@ -26,14 +26,14 @@ function EntriesAdd({ addEntryToDb, handleAddEntry }) {
       formData.name &&
       formData.lastName &&
       formData.city &&
-      formData.description
+      formData.jobTitle
     ) {
       handleAddEntry(formData);
       setFormData({
         name: "",
         lastName: "",
         city: "",
-        description: ""
+        jobTitle: ""
       });
     } else {
       alert("Please fill all of the fields before adding an entry");
@@ -41,8 +41,8 @@ function EntriesAdd({ addEntryToDb, handleAddEntry }) {
   }
 
   return (
-    <div className="p-10 flex flex-col gap-[1em] items-center justify-center">
-      <form className="flex gap-[1em] flex-wrap">
+    <div className="flex flex-col gap-[1em] items-center pt-[3em] max-w-[80%] m-auto">
+      <form className="flex gap-[1em] justify-center flex-wrap flex-col w-full min-[500px]:flex-row">
         <input
           type="text"
           id="name"
@@ -69,10 +69,10 @@ function EntriesAdd({ addEntryToDb, handleAddEntry }) {
         />
         <input
           type="text"
-          id="description"
-          name="description"
-          placeholder="Description"
-          value={formData.description}
+          id="jobTitle"
+          name="jobTitle"
+          placeholder="Job Title"
+          value={formData.jobTitle}
           onChange={(event) => handleInputChange(event)}
         />
         <input
