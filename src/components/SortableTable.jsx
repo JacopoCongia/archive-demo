@@ -39,7 +39,9 @@ function SortableTable(props) {
         ...column,
         header: () => (
           <th
-            className="cursor-pointer hover:bg-red-700 px-[1em]"
+            className={`cursor-pointer hover:bg-red-700 px-[0.5em] text-[0.7rem] ${
+              column.responsive && "hidden min-[680px]:table-cell"
+            }`}
             onClick={() => handleClick(column.label)}
           >
             <div className="flex items-center gap-[1em] justify-center">
@@ -57,9 +59,9 @@ function SortableTable(props) {
   if (term) {
     searchEntries = entries.filter((entry) => {
       return (
-        entry.name.toLowerCase().includes(term.toLowerCase()) ||
-        entry.lastName.toLowerCase().includes(term.toLowerCase()) ||
-        entry.city.toLowerCase().includes(term.toLowerCase())
+        entry.name.toLowerCase().startsWith(term.toLowerCase()) ||
+        entry.lastName.toLowerCase().startsWith(term.toLowerCase()) ||
+        entry.city.toLowerCase().startsWith(term.toLowerCase())
       );
     });
   }

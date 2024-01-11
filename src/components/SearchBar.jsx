@@ -12,7 +12,7 @@ function SearchBar({ setTerm }) {
         type="search"
         onChange={(e) => handleSearchChange(e)}
         placeholder="Search"
-        className="w-[80%]"
+        className="w-[80%] mt-[3em]"
       />
     </>
   );

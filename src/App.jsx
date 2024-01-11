@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { nanoid } from "nanoid";
-
 import Navbar from "./components/Navbar";
 import EntriesAdd from "./components/EntriesAdd";
 import SortableTable from "./components/SortableTable";
@@ -14,9 +12,18 @@ import {
   deleteDoc
 } from "firebase/firestore";
 import { db } from "../firebase.js";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import Sidebar from "./components/Sidebar.jsx";
+
+const auth = getAuth();
 
 function App() {
   const [entries, setEntries] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const [user, loading] = useAuthState(auth);
 
   const getEntriesFromDb = async () => {
     const querySnapshot = await getDocs(collection(db, "entries"));
@@ -46,13 +53,15 @@ function App() {
   }
 
   async function handleRemoveEntry(entry) {
-    const updatedEntries = entries.filter((item) => {
-      return entry.id !== item.id;
-    });
+    if (user) {
+      const updatedEntries = entries.filter((item) => {
+        return entry.id !== item.id;
+      });
 
-    setEntries(updatedEntries);
+      setEntries(updatedEntries);
 
-    await deleteDoc(doc(db, "entries", entry.id));
+      await deleteDoc(doc(db, "entries", entry.id));
+    }
   }
 
   useEffect(() => {
@@ -73,11 +82,16 @@ function App() {
     {
       label: "City",
       render: (entry) => entry.city,
-      sortValue: (entry) => entry.city
+      sortValue: (entry) => entry.city,
+      responsive: true
     },
-    { label: "Bio", render: (entry) => entry.description },
     {
-      label: "Created At",
+      label: "Job Title",
+      render: (entry) => entry.jobTitle,
+      responsive: true
+    },
+    {
+      label: "Added",
       render: (entry) => entry.createdAt,
       sortValue: (entry) => entry.createdAt
     },
@@ -85,8 +99,9 @@ function App() {
       label: "",
       render: (entry) => (
         <button
-          className="hover:font-bold min-w-[80px]"
+          className={`hover:bg-red-600 hover:text-white min-w-[65px] border px-[0.8em] py-[0.5em] disabled:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-black`}
           onClick={() => handleRemoveEntry(entry)}
+          disabled={!user}
         >
           Remove
         </button>
@@ -96,8 +111,11 @@ function App() {
 
   return (
     <>
-      <Navbar />
-      <EntriesAdd handleAddEntry={handleAddEntry} setEntries={setEntries} />
+      <Navbar open={open} setOpen={setOpen} />
+      <Sidebar open={open} setOpen={setOpen} />
+      {user && (
+        <EntriesAdd handleAddEntry={handleAddEntry} setEntries={setEntries} />
+      )}
       <div className="flex flex-col gap-[1em] items-center justify-center pb-[3em]">
         <SortableTable
           entries={entries}
