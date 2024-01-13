@@ -42,7 +42,7 @@ function EntriesAdd({ addEntryToDb, handleAddEntry }) {
 
   return (
     <div className="flex flex-col gap-[1em] items-center pt-[3em] max-w-[80%] m-auto">
-      <form className="flex gap-[1em] justify-center flex-wrap flex-col w-full min-[500px]:flex-row">
+      <form className="flex gap-[1em] flex-wrap flex-col w-full min-[500px]:flex-row">
         <input
           type="text"
           id="name"
