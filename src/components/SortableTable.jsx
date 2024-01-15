@@ -7,8 +7,8 @@ import Table from "./Table";
 function SortableTable(props) {
   const { tableConfig, entries } = props;
 
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortCriteria, setSortCriteria] = useState(null);
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortCriteria, setSortCriteria] = useState("Added");
   const [term, setTerm] = useState("");
 
   function handleClick(label) {
