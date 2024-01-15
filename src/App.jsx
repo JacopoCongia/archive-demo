@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 
 import Navbar from "./components/Navbar";
-import EntriesAdd from "./components/EntriesAdd";
+import AddEntry from "./components/AddEntry.jsx";
 import SortableTable from "./components/SortableTable";
+
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 import {
   collection,
@@ -16,12 +19,15 @@ import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import Sidebar from "./components/Sidebar.jsx";
+import EditEntry from "./components/EditEntry.jsx";
 
 const auth = getAuth();
 
 function App() {
   const [entries, setEntries] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState("");
 
   const [user, loading] = useAuthState(auth);
 
@@ -50,6 +56,11 @@ function App() {
     };
     addEntryToDb(updatedEntry);
     getEntriesFromDb();
+  }
+
+  function handleEditEntry(entry) {
+    setSelectedEntry(entry);
+    setIsEditing(true);
   }
 
   async function handleRemoveEntry(entry) {
@@ -98,13 +109,22 @@ function App() {
     {
       label: "",
       render: (entry) => (
-        <button
-          className={`hover:bg-red-600 hover:text-white min-w-[65px] border px-[0.8em] py-[0.5em] disabled:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-black`}
-          onClick={() => handleRemoveEntry(entry)}
-          disabled={!user}
-        >
-          Remove
-        </button>
+        <div className="flex text-[1.2rem] items-center justify-center gap-[0.5em] text-neutral-700">
+          <button
+            className={`hover:text-[#48adff] disabled:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed`}
+            onClick={() => handleEditEntry(entry)}
+            disabled={!user}
+          >
+            <FaEdit />
+          </button>
+          <button
+            className={`hover:text-red-600 disabled:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed`}
+            onClick={() => handleRemoveEntry(entry)}
+            disabled={!user}
+          >
+            <MdDelete />
+          </button>
+        </div>
       )
     }
   ];
@@ -113,16 +133,24 @@ function App() {
     <>
       <Navbar open={open} setOpen={setOpen} />
       <Sidebar open={open} setOpen={setOpen} />
-      {user && (
-        <EntriesAdd handleAddEntry={handleAddEntry} setEntries={setEntries} />
+      {user && !isEditing && (
+        <AddEntry handleAddEntry={handleAddEntry} setEntries={setEntries} />
       )}
-      <div className="flex flex-col gap-[1em] items-center justify-center pb-[3em]">
-        <SortableTable
-          entries={entries}
-          tableConfig={tableConfig}
-          handleRemoveEntry={handleRemoveEntry}
+      {user && isEditing ? (
+        <EditEntry
+          setIsEditing={setIsEditing}
+          selectedEntry={selectedEntry}
+          getEntriesFromDb={getEntriesFromDb}
         />
-      </div>
+      ) : (
+        <div className="flex flex-col gap-[1em] items-center justify-center pb-[3em]">
+          <SortableTable
+            entries={entries}
+            tableConfig={tableConfig}
+            handleRemoveEntry={handleRemoveEntry}
+          />
+        </div>
+      )}
     </>
   );
 }

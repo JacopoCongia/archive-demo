@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -10,8 +12,17 @@ const auth = getAuth();
 
 function SignIn() {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [inputType, setInputType] = useState("password");
   const [error, setError] = useState(null);
   const [user, loading] = useAuthState(auth);
+
+  function handleShowPassword() {
+    if (inputType === "password") {
+      setInputType("text");
+    } else {
+      setInputType("password");
+    }
+  }
 
   function handleChange(e) {
     e.preventDefault();
@@ -55,14 +66,27 @@ function SignIn() {
               placeholder="Email"
               onChange={(e) => handleChange(e)}
             />
-            <input
-              className="w-[250px] text-[0.8rem] text-center"
-              type="password"
-              name="password"
-              value={formData.password}
-              placeholder="Password"
-              onChange={(e) => handleChange(e)}
-            />
+            <div className="relative">
+              <input
+                className="w-[250px] text-[0.8rem] text-center "
+                type={inputType}
+                name="password"
+                value={formData.password}
+                placeholder="Password"
+                onChange={(e) => handleChange(e)}
+              />
+              {inputType === "password" ? (
+                <IoMdEye
+                  className="absolute right-[5%] top-[23%] text-neutral-600 text-[1.2rem] cursor-pointer hover:opacity-80"
+                  onClick={() => handleShowPassword()}
+                />
+              ) : (
+                <IoMdEyeOff
+                  className="absolute right-[5%] top-[23%] text-neutral-600 text-[1.2rem] cursor-pointer hover:opacity-80"
+                  onClick={() => handleShowPassword()}
+                />
+              )}
+            </div>
             <button
               onClick={(e) => handleSubmit(e)}
               className="w-[250px] bg-[#202020] text-white font-semibold text-[0.8rem] cursor-pointer hover:bg-[#3f3f3f] py-[0.5em]"
