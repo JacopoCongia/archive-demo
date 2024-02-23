@@ -102,7 +102,7 @@ function App() {
       responsive: true
     },
     {
-      label: "Added",
+      label: "Last Edited",
       render: (entry) => entry.createdAt,
       sortValue: (entry) => entry.createdAt
     },

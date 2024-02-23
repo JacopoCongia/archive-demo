@@ -8,7 +8,7 @@ function SortableTable(props) {
   const { tableConfig, entries } = props;
 
   const [sortOrder, setSortOrder] = useState("desc");
-  const [sortCriteria, setSortCriteria] = useState("Added");
+  const [sortCriteria, setSortCriteria] = useState("Last Edited");
   const [term, setTerm] = useState("");
 
   function handleClick(label) {
