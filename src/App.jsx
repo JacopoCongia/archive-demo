@@ -9,10 +9,12 @@ import { MdDelete } from "react-icons/md";
 
 import {
   collection,
-  getDocs,
   addDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  query,
+  onSnapshot,
+  orderBy
 } from "firebase/firestore";
 import { db } from "../firebase.js";
 import { getAuth } from "firebase/auth";
@@ -32,13 +34,26 @@ function App() {
   const [user, loading] = useAuthState(auth);
 
   const getEntriesFromDb = async () => {
-    const querySnapshot = await getDocs(collection(db, "entries"));
-    const people = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id
-    }));
+    try {
+      const entriesRef = collection(db, "entries");
+      const q = query(entriesRef, orderBy("createdAt", "desc"));
 
-    setEntries(people);
+      onSnapshot(q, (querySnapshot) => {
+        const people = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        setEntries(people);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    // const querySnapshot = await getDocs(collection(db, "entries"));
+    // const people = querySnapshot.docs.map((doc) => ({
+    //   ...doc.data(),
+    //   id: doc.id
+    // }));
   };
 
   const addEntryToDb = async (entry) => {
@@ -55,7 +70,7 @@ function App() {
       createdAt: new Date().toLocaleString("de-DE")
     };
     addEntryToDb(updatedEntry);
-    getEntriesFromDb();
+    // getEntriesFromDb();
   }
 
   function handleEditEntry(entry) {

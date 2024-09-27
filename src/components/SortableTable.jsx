@@ -10,6 +10,7 @@ function SortableTable(props) {
   const [sortOrder, setSortOrder] = useState("desc");
   const [sortCriteria, setSortCriteria] = useState("Last Edited");
   const [term, setTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   function handleClick(label) {
     if (sortCriteria && label !== sortCriteria) {
@@ -53,11 +54,12 @@ function SortableTable(props) {
     }
   });
 
+  let paginatedEntries = entries.slice(currentPage * 10 - 10, currentPage * 10);
   let sortedEntries = entries;
-  let searchEntries = entries;
+  let searchedEntries = entries;
 
   if (term) {
-    searchEntries = entries.filter((entry) => {
+    searchedEntries = entries.filter((entry) => {
       return (
         entry.name.toLowerCase().startsWith(term.toLowerCase()) ||
         entry.lastName.toLowerCase().startsWith(term.toLowerCase()) ||
@@ -66,22 +68,46 @@ function SortableTable(props) {
     });
   }
 
-  if (sortOrder && sortCriteria) {
-    const { sortValue } = tableConfig.find(
-      (column) => column.label === sortCriteria
-    );
-    sortedEntries = [...entries].sort((a, b) => {
-      const valueA = sortValue(a);
-      const valueB = sortValue(b);
+  if (term) {
+    if (sortOrder && sortCriteria) {
+      const { sortValue } = tableConfig.find(
+        (column) => column.label === sortCriteria
+      );
 
-      const reverseOrder = sortOrder === "asc" ? 1 : -1;
+      sortedEntries = [...searchedEntries].sort((a, b) => {
+        const valueA = sortValue(a);
+        const valueB = sortValue(b);
 
-      if (typeof valueA === "string") {
-        return valueA.localeCompare(valueB) * reverseOrder;
-      } else {
-        return (valueA - valueB) * reverseOrder;
-      }
-    });
+        const reverseOrder = sortOrder === "asc" ? 1 : -1;
+
+        if (typeof valueA === "string") {
+          return valueA.localeCompare(valueB) * reverseOrder;
+        } else {
+          return (valueA - valueB) * reverseOrder;
+        }
+      });
+    } else {
+      sortedEntries = [...searchedEntries];
+    }
+  } else {
+    if (sortOrder && sortCriteria) {
+      const { sortValue } = tableConfig.find(
+        (column) => column.label === sortCriteria
+      );
+
+      sortedEntries = [...entries].sort((a, b) => {
+        const valueA = sortValue(a);
+        const valueB = sortValue(b);
+
+        const reverseOrder = sortOrder === "asc" ? 1 : -1;
+
+        if (typeof valueA === "string") {
+          return valueA.localeCompare(valueB) * reverseOrder;
+        } else {
+          return (valueA - valueB) * reverseOrder;
+        }
+      });
+    }
   }
 
   function getSortIcon(label) {
@@ -100,11 +126,15 @@ function SortableTable(props) {
   return (
     <>
       <SearchBar setTerm={setTerm} />
-      {term ? (
-        <Table {...props} entries={searchEntries} tableConfig={updatedConfig} />
-      ) : (
-        <Table {...props} entries={sortedEntries} tableConfig={updatedConfig} />
-      )}
+      <Table {...props} entries={sortedEntries} tableConfig={updatedConfig} />
+
+      {/* <div className="flex gap-2">
+        <div>First</div>
+        <div>{currentPage !== 1 ? currentPage - 1 : null}</div>
+        <div>{currentPage}</div>
+        <div>{currentPage + 1}</div>
+        <div>Last</div>
+      </div> */}
     </>
   );
 }
